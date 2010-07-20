@@ -30,6 +30,7 @@ public class LoadRegularExpressions {
       
       //Java regular expressions
       //http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html
+      System.out.println("LoadRegularExpressions.update( ");
 
        try  {
            searchList.clear();
@@ -38,6 +39,13 @@ public class LoadRegularExpressions {
            System.out.println("Loading Config File");
            //... Loop as long as there are input lines.
            String line = reader.readLine();
+            if (line == null) {
+               //Empty initialised File
+
+               reader.close();
+               return ;
+            }
+
            line        = trim(line);
            while (line != null) {
                

@@ -179,8 +179,13 @@ public class FileRenamer {
       //editMenu = new JMenu("Edit");
       helpMenu = new JMenu("Help");
 
-      editCongifJMenu = new JMenuItem(editConfigAction);
-		editCongifJMenu.setEnabled(false);  
+      //Only rebuild this option if first run
+      // This maintains previous state
+      if (editCongifJMenu == null) {
+         editCongifJMenu = new JMenuItem(editConfigAction);
+         editCongifJMenu.setEnabled(false);  
+      }
+      
       //Build File Menu
       fileMenu.add(new JMenuItem(showAboutAction));
       fileMenu.addSeparator();
@@ -270,8 +275,13 @@ public class FileRenamer {
             System.out.println("Opening: " + configFile.getName());
 
             //Sort out pref system
+            System.out.println("Line 278");
             fileList.openFile(configFile);
+
+            System.out.println("Line 281");
             loadedReqExp.update(configFile);
+
+            System.out.println("Line 284");
             addMenus();
          } else {
             System.out.println("Open command cancelled by user.");
@@ -306,15 +316,30 @@ public class FileRenamer {
             //JFrame frame = new JFrame();
             //String newFile = JOptionPane.showInputDialog(frame, "New Config File Name");
             configFile = new File(filename);
+            System.out.println(filename); 
 
-            //TODO Create Empty File
 
-            //Added to prefs menu
-            fileList.openFile(configFile);
+            try {
+               //TODO Create Empty File if it dos not exist
+               if (configFile.exists() == false ) { 
+                   System.out.println("Creating " + filename); 
+                  configFile.createNewFile();  
+                  
+               }
 
-			   editCongifJMenu.setEnabled(true); 
-            addMenus();
-   
+
+               //Added to prefs menu
+               fileList.openFile(configFile);
+               loadedReqExp.update(configFile);
+
+               System.out.println("Enabling Edit");
+			      editCongifJMenu.setEnabled(true); 
+               addMenus();
+            } catch ( java.io.IOException e2)  {
+               //Do nothing just exit
+               System.out.println("ERROR when creating comfig file.");
+               System.out.println(e2);
+            }
 
          } else {
             System.out.println("File chooser cancel button clicked");
@@ -326,7 +351,6 @@ public class FileRenamer {
 	public class editConfigActionClass extends AbstractAction {
       public editConfigActionClass(String text) {
          super(text);
-			
       }
       public editConfigActionClass(String text, KeyStroke shortcut) {
          super(text);
