@@ -82,15 +82,9 @@ public class ViewCurrentRules extends JFrame { // implements MouseListener {
 
          newRule.addMouseListener(mouseAction);
          topPanel.add( newRule );
-                  
-         System.out.println("Looping over rule :" + i);
       }
-      
-      
             
       createPopupMenu();
-
-      
 
       topPanel.revalidate();
       repaint();   
@@ -179,26 +173,42 @@ public class ViewCurrentRules extends JFrame { // implements MouseListener {
             FindReplace oneRule = (FindReplace) loadedReqExp.searchList.remove( selected );
             loadedReqExp.searchList.insertElementAt( oneRule ,selected - 1);
          }
-         draw() ;   
-         //0
-         //2 Selected
-         //1
-         //3
-         //4
-
-         
+         draw() ;
+         ((JLabelRule) oneRuleJLabel.get(selected - 1)).select();
       }
    };
 
    ActionListener actionEdit = new ActionListener () {
       public void actionPerformed(ActionEvent e) {
          System.out.println("ActionListener Edit");
+
+         EditRule editRule = new EditRule("");
+         editRule.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	   	editRule.setVisible(true);
       }
    };
 
    ActionListener actionDown = new ActionListener () {
       public void actionPerformed(ActionEvent e) {
          System.out.println("ActionListener Down");
+         JLabelRule tempLabel;
+         int selected = -1;
+         for (int i = 0 ; i < oneRuleJLabel.size() ; i++ ){
+            tempLabel  = (JLabelRule) oneRuleJLabel.get(i) ;
+            if (tempLabel.isSelected()) {
+               selected = i;
+            }
+         }
+
+         if ((selected >= 0) && (selected < (oneRuleJLabel.size() - 1) ) ) {
+             tempLabel  = (JLabelRule) oneRuleJLabel.get(selected) ;
+            //((JLabelRule) oneRuleJLabel.get(selected - 1)).select();
+            FindReplace oneRule = (FindReplace) loadedReqExp.searchList.remove( selected );
+            loadedReqExp.searchList.insertElementAt( oneRule ,selected + 1);
+         }
+         draw() ;
+         ((JLabelRule) oneRuleJLabel.get(selected + 1)).select();
+
       }
    };
 
