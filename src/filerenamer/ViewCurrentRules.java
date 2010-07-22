@@ -37,17 +37,35 @@ public class ViewCurrentRules extends JFrame { // implements MouseListener {
       super("FileRenamer | Rules List");
       this.loadedReqExp = loadedReqExp;
       this.setResizable(true);
-      this.rules = new Vector();
-
-      this.oneRuleJLabel = new Vector();
-      
+      this.setSize(500, 300);
 
       topPanel = new JPanel();
       topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
       title = new JLabel("Current Search and Replace Rules");
-      topPanel.add(title);
       
+      scrollPanel = new javax.swing.JScrollPane(topPanel);
+      
+      //this.addMouseListener(this);
+      //topPanel.addMouseListener(this);
+      //scrollPanel.addMouseListener(this);
+      
+      getContentPane().add( scrollPanel, java.awt.BorderLayout.CENTER );
+      //this.add(topLevelScrollPane);
+
+      draw();
+   }
+     
+   public void draw() {  
+      
+      System.out.println("draw()");
+      
+      //this.rules         = new Vector();
+      this.oneRuleJLabel = new Vector();
+      
+      //Clear Panel 
+      topPanel.removeAll();
+      topPanel.add(title);    
       
       for (int i=0; i<loadedReqExp.searchList.size() ; i++) {
          FindReplace oneRule = (FindReplace) loadedReqExp.searchList.elementAt(i);
@@ -60,28 +78,24 @@ public class ViewCurrentRules extends JFrame { // implements MouseListener {
          
          ((JLabel) oneRuleJLabel.get(i)).setFont(new Font("Courier New", Font.PLAIN, 14));
          //oneRuleJLabel.addMouseListener(this);
-         topPanel.add((JLabelRule) oneRuleJLabel.get(i));
-         
-         //System.out.println("Looping over rule :" + i);
+         JLabelRule newRule = (JLabelRule) oneRuleJLabel.get(i);
+
+         newRule.addMouseListener(mouseAction);
+         topPanel.add( newRule );
+                  
+         System.out.println("Looping over rule :" + i);
       }
       
       
-      scrollPanel = new javax.swing.JScrollPane(topPanel);
-      
-      //this.addMouseListener(this);
-      //topPanel.addMouseListener(this);
-      //scrollPanel.addMouseListener(this);
-      
-       getContentPane().add( 
-         scrollPanel,
-         java.awt.BorderLayout.CENTER );
-       //this.add(topLevelScrollPane);
-      
-        createPopupMenu();
+            
+      createPopupMenu();
 
-       this.setSize(500, 300);
       
+
+      topPanel.revalidate();
+      repaint();   
    } 
+
    public void createPopupMenu() {
             System.out.println("createPopupMenu called");
             //Create the popup menu.
@@ -149,6 +163,30 @@ public class ViewCurrentRules extends JFrame { // implements MouseListener {
    ActionListener actionUp = new ActionListener () {
       public void actionPerformed(ActionEvent e) {
          System.out.println("ActionListener Up");
+
+         JLabelRule tempLabel;
+         int selected = -1;
+         for (int i = 0 ; i < oneRuleJLabel.size() ; i++ ){
+            tempLabel  = (JLabelRule) oneRuleJLabel.get(i) ;
+            if (tempLabel.isSelected()) {
+               selected = i;
+            }
+         }
+
+         if ((selected > 0) && (selected < oneRuleJLabel.size() ) ) {
+             tempLabel  = (JLabelRule) oneRuleJLabel.get(selected) ;
+            //((JLabelRule) oneRuleJLabel.get(selected - 1)).select();
+            FindReplace oneRule = (FindReplace) loadedReqExp.searchList.remove( selected );
+            loadedReqExp.searchList.insertElementAt( oneRule ,selected - 1);
+         }
+         draw() ;   
+         //0
+         //2 Selected
+         //1
+         //3
+         //4
+
+         
       }
    };
 
@@ -163,5 +201,24 @@ public class ViewCurrentRules extends JFrame { // implements MouseListener {
          System.out.println("ActionListener Down");
       }
    };
+
+
+   MouseListener mouseAction = new MouseAdapter() {  
+      public void mouseClicked(MouseEvent me){
+         System.out.println("Mouse Clicked  ");
+
+         JLabelRule label; // = (JLabelRule) me.getComponent(); 
+         
+         for (int i=0; i<oneRuleJLabel.size(); i++ ){
+            label = (JLabelRule)  oneRuleJLabel.get(i) ;
+            label.deselect();
+         }
+
+         label = (JLabelRule) me.getComponent(); 
+         label.select();
+      }
+
+   };
+
 
 }

@@ -15,7 +15,7 @@ public class JLabelRule extends JLabel { //implements ItemListener, MouseListene
    
    public boolean selected;
    int index;
-   
+    
    
    
    public JLabelRule(int index, String text) {
@@ -23,6 +23,11 @@ public class JLabelRule extends JLabel { //implements ItemListener, MouseListene
       this.selected = false;
       this.index = index;
       //addMouseListener(this);
+
+      System.out.println("rendering rule " + index);
+      reColor();
+
+
    }
    
    public int getIndex() {
@@ -47,8 +52,8 @@ public class JLabelRule extends JLabel { //implements ItemListener, MouseListene
       this.setOpaque(true);
       if (selected == true) { 
          this.setBackground(highlighted);
-      //} else if ((this.position%2) == 0) {
-      // this.setBackground(evenLine);
+      } else if ((this.index%2) == 0) {
+       this.setBackground(evenLine);
       } else {
          this.setBackground(oddLine);
       }

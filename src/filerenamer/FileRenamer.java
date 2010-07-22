@@ -275,13 +275,10 @@ public class FileRenamer {
             System.out.println("Opening: " + configFile.getName());
 
             //Sort out pref system
-            System.out.println("Line 278");
             fileList.openFile(configFile);
 
-            System.out.println("Line 281");
             loadedReqExp.update(configFile);
 
-            System.out.println("Line 284");
             addMenus();
          } else {
             System.out.println("Open command cancelled by user.");
@@ -364,9 +361,10 @@ public class FileRenamer {
    }
 
 	private void launchEditJFrame() {
-		if (editJFrame == null) {
+		//if (editJFrame == null) {
+         // Reload Rules Eachtime to reflect current expression
          editJFrame = new ViewCurrentRules(loadedReqExp);
-      }
+      //}
       editJFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editJFrame.setVisible(true);
 	}

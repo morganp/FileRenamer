@@ -41,7 +41,6 @@ public class LoadRegularExpressions {
            String line = reader.readLine();
             if (line == null) {
                //Empty initialised File
-
                reader.close();
                return ;
             }
